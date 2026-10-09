@@ -1,0 +1,96 @@
+# =========================
+
+# Python
+
+# =========================
+
+**pycache**/
+*.py[cod]
+*.so
+.pytest_cache/
+
+# =========================
+
+# Environnements virtuels
+
+# =========================
+
+.venv/
+venv/
+env/
+
+# =========================
+
+# Secrets et variables locales
+
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# =========================
+
+# Jupyter
+
+# =========================
+
+.ipynb_checkpoints/
+
+# =========================
+
+# IDE et système
+
+# =========================
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+
+# Données audio et datasets
+
+# =========================
+
+data/raw/*
+data/interim/*
+data/processed/*
+data/features/*
+
+# Garder les dossiers dans Git
+
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/features/.gitkeep
+
+# =========================
+
+# Modèles et résultats locaux
+
+# =========================
+
+models/*
+!models/README.md
+
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.onnx
+
+outputs/
+mlruns/
+artifacts/
+
+# =========================
+
+# Logs
+
+# =========================
+
+*.log
+logs/
