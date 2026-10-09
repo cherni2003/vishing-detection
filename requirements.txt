@@ -1,0 +1,22 @@
+# Audio processing
+
+librosa
+soundfile
+
+# Data processing
+
+numpy
+pandas
+scikit-learn
+
+# Experiment tracking
+
+mlflow
+
+# Configuration
+
+PyYAML
+
+# Testing
+
+pytest
