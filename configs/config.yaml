@@ -1,0 +1,22 @@
+project:
+name: vishing-detection
+random_seed: 42
+
+paths:
+data_dir: data
+raw_dir: data/raw
+interim_dir: data/interim
+processed_dir: data/processed
+features_dir: data/features
+metadata_dir: data/metadata
+models_dir: models
+reports_dir: reports
+
+data:
+manifest_path: data/metadata/audio_manifest.csv
+catalog_path: data/metadata/datasets_catalog.csv
+
+training:
+test_size: 0.2
+validation_size: 0.1
+random_seed: 42
