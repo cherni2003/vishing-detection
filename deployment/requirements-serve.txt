@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+numpy
+scipy
+soundfile
+librosa
+scikit-learn
+joblib
+PyYAML
+pandas<3
+# torch + transformers : requis par l'encodeur d'embeddings (voir app.embed)

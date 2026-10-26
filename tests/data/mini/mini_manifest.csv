@@ -1,0 +1,9 @@
+sample_id,filename,label,label_original,duration_sec,split
+normal_00,normal_00.wav,0,normal,3.0,train
+normal_01,normal_01.wav,0,normal,3.0,train
+normal_02,normal_02.wav,0,normal,3.0,validation
+normal_03,normal_03.wav,0,normal,3.0,test
+scam_00,scam_00.wav,1,scam,7.0,train
+scam_01,scam_01.wav,1,scam,7.0,train
+scam_02,scam_02.wav,1,scam,7.0,validation
+scam_03,scam_03.wav,1,scam,7.0,test

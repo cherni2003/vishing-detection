@@ -1,0 +1,30 @@
+# Données et Spark (Java 17+ requis pour PySpark)
+pandas<3        # PySpark ne supporte pas encore pandas 3
+numpy
+pyarrow
+pyspark
+
+# Audio
+librosa
+soundfile
+scipy
+
+# ML
+scikit-learn
+joblib
+# torch et transformers : requis pour les embeddings (préinstallés sur Kaggle)
+# torch
+# transformers
+
+# Suivi et versionnement
+mlflow
+dvc
+dvc-s3
+
+# Configuration, rapports, visualisation
+PyYAML
+tabulate
+matplotlib
+
+# Tests
+pytest

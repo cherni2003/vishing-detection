@@ -1,0 +1,5 @@
+kaggle:
+  input_dir: /kaggle/input
+  working_dir: /kaggle/working
+  repo_url: https://github.com/<organisation>/vishing-detection.git   # à renseigner
+  mlflow_dir: /kaggle/working/mlruns

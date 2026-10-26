@@ -1,0 +1,6 @@
+spark:
+  app_name: vishing-detection
+  master: "local[*]"        # une seule machine (poste local ou Kaggle)
+  driver_memory: "4g"       # augmenter sur Kaggle (ex. 8g)
+  shuffle_partitions: 16    # 64 ou plus quand les 6 corpus sont réunis
+  parquet_compression: snappy

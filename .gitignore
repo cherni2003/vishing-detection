@@ -1,0 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.pytest_cache/
+
+# Environnements virtuels
+.venv/
+.venv-*/
+venv/
+env/
+
+# Secrets et variables locales
+.env
+.env.*
+!.env.example
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Données (versionnées par DVC, jamais par Git)
+data/raw/*
+data/interim/*
+data/processed/*
+data/features/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/features/.gitkeep
+
+# Audio et archives : jamais dans Git (sauf le mini-jeu de test)
+*.wav
+*.zip
+!tests/data/mini/*.wav
+
+# Modèles et résultats locaux
+models/*
+!models/README.md
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.onnx
+outputs/
+mlruns/
+artifacts/
+checkpoints/
+spark-warehouse/
+metastore_db/
+
+# Logs
+*.log
+logs/

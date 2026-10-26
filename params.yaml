@@ -1,0 +1,29 @@
+seed: 42
+
+prepare:
+  label_map: {normal: 0, scam: 1}
+  group_col: scenario_id          # les segments d'un même groupe restent dans le même split
+
+segmentation:
+  window_sec: 10
+  hop_sec: 5
+  target_sample_rate: 16000
+
+features:
+  n_mfcc: 20
+
+embeddings:
+  model_name: facebook/wav2vec2-xls-r-300m   # à comparer avec d'autres encodeurs
+  pooling: mean
+  batch_size: 8
+
+train:
+  head: logistic                  # logistic | rf
+  C: 1.0
+  max_iter: 1000
+
+evaluate:
+  split: test
+  threshold: 0.5
+  aggregation: mean               # mean | max | topk
+  topk: 3

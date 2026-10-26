@@ -1,0 +1,79 @@
+stages:
+  validate:
+    cmd: python -m vishing_detection.pipeline.run_stage validate
+    deps:
+      - data/metadata/audio_manifest.csv
+      - src/vishing_detection/spark/validate.py
+      - configs/spark.yaml
+    outs:
+      - data/interim/quality.parquet
+
+  prepare:
+    cmd: python -m vishing_detection.pipeline.run_stage prepare
+    deps:
+      - data/metadata/audio_manifest.csv
+      - data/interim/quality.parquet
+      - src/vishing_detection/spark/prepare.py
+    params:
+      - prepare
+      - segmentation
+    outs:
+      - data/processed/manifest.parquet
+      - data/processed/segments.parquet
+
+  baselines:
+    cmd: python -m vishing_detection.pipeline.run_stage baselines
+    deps:
+      - data/processed/manifest.parquet
+      - src/vishing_detection/models/baselines.py
+    metrics:
+      - reports/baselines.json:
+          cache: false
+
+  features_handcrafted:
+    cmd: python -m vishing_detection.pipeline.run_stage features_handcrafted
+    deps:
+      - data/processed/segments.parquet
+      - src/vishing_detection/audio/features.py
+      - src/vishing_detection/spark/extract_features.py
+    params:
+      - features
+      - segmentation.target_sample_rate
+    outs:
+      - data/features/handcrafted.parquet
+
+  embeddings:            # à exécuter sur Kaggle (GPU), puis dvc push
+    cmd: python -m vishing_detection.pipeline.run_stage embeddings
+    deps:
+      - data/processed/segments.parquet
+      - src/vishing_detection/models/embeddings.py
+    params:
+      - embeddings
+      - segmentation.target_sample_rate
+    outs:
+      - data/features/embeddings.parquet
+
+  train:
+    cmd: python -m vishing_detection.pipeline.run_stage train
+    deps:
+      - data/features/embeddings.parquet
+      - data/processed/segments.parquet
+      - src/vishing_detection/models/train.py
+    params:
+      - seed
+      - train
+    outs:
+      - models/latest
+
+  evaluate:
+    cmd: python -m vishing_detection.pipeline.run_stage evaluate
+    deps:
+      - models/latest
+      - data/features/embeddings.parquet
+      - data/processed/segments.parquet
+      - src/vishing_detection/models/evaluate.py
+    params:
+      - evaluate
+    metrics:
+      - reports/metrics.json:
+          cache: false
