@@ -1,0 +1,7 @@
+{
+  "segment_accuracy": 0.8323699421965318,
+  "call_accuracy": 0.8498789346246973,
+  "call_f1": 0.8609865470852018,
+  "call_roc_auc": 0.9360255147507153,
+  "baseline_duree_seule": 0.956
+}

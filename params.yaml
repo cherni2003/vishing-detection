@@ -27,3 +27,8 @@ evaluate:
   threshold: 0.5
   aggregation: mean               # mean | max | topk
   topk: 3
+
+
+analyse:
+  band_widths: [2, 3, 4, 6]   # largeurs de bande (s) autour du seuil de durée
+  min_calls: 30

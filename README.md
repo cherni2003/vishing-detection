@@ -119,6 +119,27 @@ Le code source est géré avec Git et GitHub.
 
 Le projet est en phase de préparation de l'architecture et d'audit des sources de données. Les modèles, les caractéristiques audio définitives et les étapes d'entraînement seront sélectionnés après l'analyse des datasets disponibles.
 
+## 9 bis. Résultats préliminaires (VISHGUARD, anglais et français)
+
+Corpus : 2 061 appels synthétiques (EN/FR), split stratifié au niveau de l'appel, 413 appels de test.
+Score d'appel = moyenne des scores de ses segments de 10 s.
+
+| Modèle | Accuracy | F1 | AUC |
+|---|---|---|---|
+| Classe majoritaire | 49,9 % | - | - |
+| Règle sur la durée de l'appel (seuil 18,9 s) | 95,6 % | - | 0,993 |
+| MFCC + régression logistique | 85,0 % | 0,86 | 0,936 |
+| Wav2Vec2 (XLS-R 300M) + régression logistique | 96,6 % | 0,97 | 0,994 |
+
+**Limite principale.** Dans VISHGUARD, les appels frauduleux sont nettement plus longs que les légitimes :
+la durée seule sépare les classes à 95,6 % (AUC 0,993). Les scores globaux surestiment donc la capacité
+du modèle à détecter le vishing. Dans une bande de ±2 s autour du seuil de durée (90 appels), le modèle
+atteint une AUC de 0,979 contre 0,883 pour la durée seule : il apprend donc autre chose que la longueur.
+
+**À valider.** Une seule voix de synthèse par langue et des scripts écrits par les mêmes auteurs :
+ce signal peut venir du style des scripts ou de la voix. Une évaluation sur des appels réels ou
+sur une autre source est nécessaire avant toute conclusion sur des appels réels.
+
 ## 10. Avertissement
 
 Ce projet est réalisé à des fins académiques et de recherche en cybersécurité. Les résultats dépendront de la qualité, de la représentativité et des limites des données utilisées. Le système développé ne doit pas être considéré comme une garantie absolue de détection du vishing.

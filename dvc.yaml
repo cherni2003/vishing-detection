@@ -77,3 +77,18 @@ stages:
     metrics:
       - reports/metrics.json:
           cache: false
+
+  analyse_duree:
+    cmd: python -m vishing_detection.pipeline.run_stage analyse_duree
+    deps:
+      - models/latest
+      - data/features/embeddings.parquet
+      - data/processed/manifest.parquet
+      - data/processed/segments.parquet
+      - src/vishing_detection/models/analyse_duree.py
+    params:
+      - evaluate
+      - analyse
+    metrics:
+      - reports/analyse_duree.json:
+          cache: false

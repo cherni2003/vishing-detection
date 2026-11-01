@@ -4,7 +4,7 @@ from __future__ import annotations
 import argparse
 
 SPARK_STAGES = {"validate", "prepare", "features_handcrafted"}
-PLAIN_STAGES = {"baselines", "embeddings", "train", "evaluate"}
+PLAIN_STAGES = {"baselines", "embeddings", "train", "evaluate", "analyse_duree"}
 STAGES = sorted(SPARK_STAGES | PLAIN_STAGES)
 
 
@@ -24,10 +24,11 @@ def main(argv=None) -> None:
         finally:
             spark.stop()
     else:
-        from vishing_detection.models import baselines, embeddings, evaluate, train
+        from vishing_detection.models import analyse_duree, baselines, embeddings, evaluate, train
 
         {"baselines": baselines, "embeddings": embeddings,
-         "train": train, "evaluate": evaluate}[stage].run()
+         "train": train, "evaluate": evaluate,
+         "analyse_duree": analyse_duree}[stage].run()
 
 
 if __name__ == "__main__":

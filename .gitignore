@@ -59,3 +59,7 @@ metastore_db/
 # Logs
 *.log
 logs/
+
+
+mlflow.db
+mlflow.db-journal
