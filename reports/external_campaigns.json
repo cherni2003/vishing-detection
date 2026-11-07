@@ -1,0 +1,34 @@
+{
+  "n_appels": 1353,
+  "n_campagnes": 31,
+  "part_plus_grosse_campagne": 0.084,
+  "part_top5_campagnes": 0.318,
+  "rappel_global": 0.9852,
+  "ic95_bootstrap_par_campagne": [
+    0.9721,
+    0.995
+  ],
+  "rappel_appels_courts": 0.9922,
+  "ic95_courts_bootstrap_par_campagne": [
+    0.9815,
+    1.0
+  ],
+  "campagnes_rappel_inf_90": [
+    {
+      "case_details": "cease-desist-letter-acrobat-communications-inc",
+      "n": 49,
+      "rappel": 0.878,
+      "n_courts": 13,
+      "rappel_courts": 1.0,
+      "duree_mediane": 29.96
+    },
+    {
+      "case_details": "cease-desist-letter-idt-telecom-inc",
+      "n": 17,
+      "rappel": 0.882,
+      "n_courts": 10,
+      "rappel_courts": 0.8,
+      "duree_mediane": 13.676
+    }
+  ]
+}

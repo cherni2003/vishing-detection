@@ -1,0 +1,96 @@
+{
+  "seuil_score": 0.5599999999999999,
+  "seuil_duree_s": 18.88,
+  "bande": {
+    "auc_modele": {
+      "ic": [
+        0.948,
+        0.9985
+      ],
+      "moyenne": 0.9794
+    },
+    "auc_duree": {
+      "ic": [
+        0.8035,
+        0.9486
+      ],
+      "moyenne": 0.8826
+    },
+    "auc_diff": {
+      "ic": [
+        0.0231,
+        0.1813
+      ],
+      "moyenne": 0.0968
+    },
+    "acc_modele": {
+      "ic": [
+        0.8778,
+        0.9778
+      ],
+      "moyenne": 0.9332
+    },
+    "acc_duree": {
+      "ic": [
+        0.7444,
+        0.8889
+      ],
+      "moyenne": 0.8223
+    },
+    "acc_diff": {
+      "ic": [
+        0.0111,
+        0.2111
+      ],
+      "moyenne": 0.1109
+    },
+    "n_appels": 90,
+    "n_fraudes": 36
+  },
+  "test_complet": {
+    "auc_modele": {
+      "ic": [
+        0.989,
+        0.9981
+      ],
+      "moyenne": 0.9943
+    },
+    "auc_duree": {
+      "ic": [
+        0.9871,
+        0.9969
+      ],
+      "moyenne": 0.9926
+    },
+    "auc_diff": {
+      "ic": [
+        -0.005,
+        0.0084
+      ],
+      "moyenne": 0.0017
+    },
+    "acc_modele": {
+      "ic": [
+        0.9467,
+        0.9831
+      ],
+      "moyenne": 0.9659
+    },
+    "acc_duree": {
+      "ic": [
+        0.9346,
+        0.9758
+      ],
+      "moyenne": 0.9565
+    },
+    "acc_diff": {
+      "ic": [
+        -0.0169,
+        0.0363
+      ],
+      "moyenne": 0.0095
+    },
+    "n_appels": 413,
+    "n_fraudes": 207
+  }
+}

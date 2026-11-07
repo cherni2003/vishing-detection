@@ -92,3 +92,25 @@ stages:
     metrics:
       - reports/analyse_duree.json:
           cache: false
+
+
+  ingest_robocalls:
+    cmd: python -m vishing_detection.pipeline.run_stage ingest_robocalls
+    deps: [data/raw/ftc_robocalls]
+    params: [segmentation, external]
+    outs: [data/processed/external/calls.parquet, data/processed/external/segments.parquet]
+  embeddings_external:          # à lancer sur Kaggle (GPU), comme `embeddings`
+    cmd: python -m vishing_detection.pipeline.run_stage embeddings_external
+    deps: [data/processed/external/segments.parquet]
+    params: [embeddings]
+    outs: [data/processed/external/embeddings.parquet]
+  external_eval:
+    cmd: python -m vishing_detection.pipeline.run_stage external_eval
+    deps: [data/processed/external/embeddings.parquet, models/model.joblib]
+    params: [external, bootstrap]
+    metrics: [reports/external_eval.json]
+  bootstrap_duree:
+    cmd: python -m vishing_detection.pipeline.run_stage bootstrap_duree
+    deps: [data/processed/embeddings.parquet, models/model.joblib]
+    params: [external, bootstrap, seed]
+    metrics: [reports/bootstrap.json]

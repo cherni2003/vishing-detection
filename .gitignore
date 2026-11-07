@@ -63,3 +63,10 @@ logs/
 
 mlflow.db
 mlflow.db-journal
+data/raw/ftc_robocalls/
+data/raw/ftc_robocalls/
+*.zip
+mlflow*.db
+mlruns/
+mlruns_text/
+kaggle_slm/

@@ -2,162 +2,318 @@
 
 ## 1. Présentation du projet
 
-Le **vishing** (*voice phishing*) est une forme de cyberattaque dans laquelle un attaquant utilise un appel vocal pour tromper une victime, obtenir des informations confidentielles ou l'inciter à effectuer une action frauduleuse.
+Le **vishing** (*voice phishing*) est une forme de fraude qui utilise les appels téléphoniques pour tromper les victimes et obtenir des informations personnelles ou bancaires.
 
-Ce projet vise à étudier et développer un système de **détection du vishing à partir de données audio**, en exploitant des techniques de traitement du signal et de machine learning.
+Ce projet vise à développer un système capable de détecter les appels frauduleux à partir de fichiers audio.
 
-Le projet s'appuie sur plusieurs sources de données multilingues. Une attention particulière sera accordée à la qualité des données, à l'harmonisation des labels et à l'évaluation des modèles sur différentes langues et dialectes.
+Le système utilise des techniques de traitement audio et de machine learning pour distinguer deux catégories :
+
+- **Legitimate :** appel normal.
+- **Vishing :** appel frauduleux.
+
+Le projet étudie également les données multilingues afin de pouvoir travailler avec différentes langues et dialectes.
 
 ## 2. Objectifs
 
-* Collecter et analyser des datasets audio adaptés à la détection du vishing.
-* Vérifier la qualité, les labels, les formats et les licences des données.
-* Construire un pipeline commun de préparation et de traitement des données audio.
-* Extraire des caractéristiques pertinentes à partir des signaux audio.
-* Entraîner et comparer plusieurs modèles de machine learning.
-* Évaluer les performances à l'aide de métriques adaptées à la détection des fraudes.
-* Mettre en place des pratiques MLOps pour améliorer la traçabilité et la reproductibilité des expériences.
-* Étudier la possibilité de déployer le modèle sélectionné.
+- Collecter et analyser des datasets audio.
+- Vérifier la qualité des données et des labels.
+- Préparer les fichiers audio pour l'entraînement.
+- Extraire des caractéristiques à partir des signaux audio.
+- Entraîner et comparer plusieurs modèles de machine learning.
+- Évaluer les performances des modèles.
+- Améliorer la détection des appels frauduleux.
+- Préparer le modèle pour une future utilisation dans une application.
 
-## 3. Technologies envisagées
+## 3. Technologies utilisées
 
-| Technologie            | Utilisation prévue                                           |
-| ---------------------- | ------------------------------------------------------------ |
-| Python                 | Développement du pipeline et des modèles                     |
-| Git et GitHub          | Gestion du code et collaboration                             |
-| Apache Spark / PySpark | Traitement distribué des métadonnées et contrôles de qualité |
-| DVC                    | Versionnement des données et des artefacts volumineux        |
-| Librosa et SoundFile   | Chargement et traitement audio                               |
-| Scikit-learn           | Modèles de référence et évaluation                           |
-| Kaggle                 | Environnement d'expérimentation et d'entraînement            |
-| MLflow                 | Suivi des expériences et des métriques                       |
-| Pytest                 | Tests automatisés                                            |
-| FastAPI et Docker      | Déploiement éventuel du modèle                               |
-
-Ces technologies constituent la stack envisagée. Leur utilisation effective sera confirmée au fur et à mesure de l'avancement du projet.
+| Technologie | Utilisation |
+|---|---|
+| Python | Développement du projet |
+| Git et GitHub | Gestion du code et collaboration |
+| Apache Spark / PySpark | Préparation et traitement des données |
+| Librosa | Traitement audio et extraction MFCC |
+| Scikit-learn | Entraînement et évaluation des modèles |
+| PyTorch | Extraction des embeddings audio |
+| Wav2Vec2 XLS-R | Extraction des caractéristiques audio |
+| Kaggle | Utilisation du GPU pour les expériences |
+| DVC | Gestion du pipeline et versionnement des données |
+| MLflow | Suivi des expériences et des résultats |
 
 ## 4. Architecture du repository
 
 ```text
 vishing-detection/
-├── configs/                 # config.yaml, spark.yaml, kaggle.yaml
-├── docs/                    # architecture.md (référence), inventaire des datasets, décisions
+├── configs/
+├── docs/
 ├── data/
-│   ├── raw/                 # Données originales (DVC)
-│   ├── interim/             # Rapports de qualité (parquet)
-│   ├── processed/           # Manifest et segments (parquet)
-│   ├── features/            # Features acoustiques et embeddings (parquet)
-│   └── metadata/            # Manifest, catalogue, tables d'analyse
-├── notebooks/               # Exploration et audits
+│   ├── raw/
+│   ├── interim/
+│   ├── processed/
+│   ├── features/
+│   └── metadata/
+├── notebooks/
 ├── src/
 │   └── vishing_detection/
-│       ├── data/            # Schéma, audit, ingestion
-│       ├── audio/           # Chargement, segmentation, features, augmentation
-│       ├── spark/           # Traitements PySpark (validate, prepare, extract_features)
-│       ├── models/          # Baselines, embeddings, entraînement, évaluation, prédiction
-│       ├── tracking/        # Suivi MLflow
-│       └── pipeline/        # Point d'entrée de chaque étape
-├── kaggle/                  # Notebook d'entraînement GPU
-├── tests/                   # Tests automatisés + mini-jeu de données
-├── models/                  # Modèles entraînés (DVC)
-├── reports/                 # Rapports, métriques et figures
-├── deployment/              # API FastAPI + Dockerfile
-├── .github/workflows/       # CI (pytest)
-├── dvc.yaml  params.yaml    # Pipeline reproductible et hyperparamètres
-├── requirements.txt         # Dépendances Python
+│       ├── data/
+│       ├── audio/
+│       ├── spark/
+│       ├── models/
+│       ├── tracking/
+│       └── pipeline/
+├── kaggle/
+├── tests/
+├── models/
+├── reports/
+├── deployment/
+├── .github/workflows/
+├── dvc.yaml
+├── params.yaml
+├── requirements.txt
 └── README.md
 ```
 
-## 5. Pipeline envisagé
+## 5. Pipeline de traitement
 
-Le pipeline de traitement suivra progressivement les étapes suivantes :
+Le projet utilise plusieurs étapes pour préparer les données et entraîner les modèles.
 
-1. **Collecte et audit :** inventaire des datasets, vérification des licences, formats, langues et labels.
-2. **Validation :** contrôle des fichiers audio, des métadonnées, des doublons et des données manquantes.
-3. **Prétraitement :** préparation des fichiers audio et harmonisation des labels.
-4. **Extraction des caractéristiques :** calcul de caractéristiques audio ou utilisation de représentations apprises.
-5. **Entraînement :** création d'un modèle de référence et comparaison de plusieurs approches.
-6. **Évaluation :** analyse des performances globales et par langue ou source de données.
-7. **Versionnement et traçabilité :** conservation des versions des données, paramètres et résultats.
-8. **Export et intégration :** préparation du modèle pour la prédiction et, si nécessaire, son déploiement.
+### 5.1. Collecte et préparation des données
 
-## 6. Évaluation des modèles
+Plusieurs datasets ont été étudiés :
 
-Les modèles seront évalués à l'aide de plusieurs métriques, notamment :
+- KorCCVi
+- FTC Robocalls
+- TeleAntiFraud-28k
+- VISHGUARD
 
-* Precision
-* Recall
-* F1-score
-* Matrice de confusion
-* ROC-AUC, lorsque cette métrique est applicable
+Le dataset **VISHGUARD** a été choisi pour les premières expériences.
 
-Une attention particulière sera portée aux faux négatifs et aux faux positifs. Les résultats seront également analysés par langue et par source de données lorsque les volumes disponibles le permettent.
+Il contient des appels en anglais et en français, avec deux catégories : fraude et appel légitime.
 
-La séparation entre les ensembles d'entraînement, de validation et de test devra limiter les fuites de données, notamment entre segments provenant d'un même locuteur ou d'une même conversation.
+Au total, 2 061 appels ont été utilisés.
 
-## 7. Organisation du travail
+### 5.2. Validation des données
 
-Le projet est développé par une équipe de trois membres. Le travail sera réparti entre :
+Une première étape avec PySpark permet de vérifier :
 
-* **Data Engineering :** inventaire des datasets, métadonnées, qualité des données et organisation du pipeline.
-* **Audio Processing :** chargement, prétraitement et extraction des caractéristiques audio.
-* **Machine Learning & MLOps :** entraînement, évaluation, suivi des expériences et préparation du modèle final.
+- Les fichiers audio.
+- Les durées des appels.
+- Les labels.
+- Les doublons.
+- Les ensembles d'entraînement, de validation et de test.
 
-Les interfaces et formats communs seront définis pour permettre l'intégration des contributions.
+### 5.3. Préparation audio
 
-## 8. Collaboration et versionnement
+Les fichiers audio sont préparés et découpés en segments de 10 secondes, avec un chevauchement de 5 secondes.
 
-Le code source est géré avec Git et GitHub.
+Les fichiers sont rééchantillonnés à 16 kHz.
 
-* La branche `main` est destinée à conserver une version stable du projet.
-* Les nouvelles fonctionnalités sont développées sur des branches dédiées.
-* Les modifications sont intégrées à `main` après vérification.
-* Les datasets volumineux ne doivent pas être ajoutés directement au dépôt Git.
-* DVC pourra être utilisé pour versionner les données et les artefacts associés, avec un espace de stockage partagé configuré pour l'équipe.
+### 5.4. Extraction des caractéristiques audio
 
-## 9. État actuel du projet
+Deux approches ont été testées :
 
-Le projet est en phase de préparation de l'architecture et d'audit des sources de données. Les modèles, les caractéristiques audio définitives et les étapes d'entraînement seront sélectionnés après l'analyse des datasets disponibles.
+**Approche 1 : MFCC**
 
-## 9 bis. Résultats préliminaires (VISHGUARD, anglais et français)
+Les caractéristiques audio MFCC et d'autres informations acoustiques sont extraites avec Librosa et PySpark.
 
-Corpus : 2 061 appels synthétiques (EN/FR), split stratifié au niveau de l'appel, 413 appels de test.
-Score d'appel = moyenne des scores de ses segments de 10 s.
+**Approche 2 : Wav2Vec2 XLS-R**
 
-| Modèle | Accuracy | F1 | AUC |
-|---|---|---|---|
+Le modèle pré-entraîné Wav2Vec2 XLS-R 300M est utilisé pour extraire des embeddings audio.
+
+L'extraction est réalisée sur Kaggle avec un GPU.
+
+### 5.5. Entraînement des modèles
+
+Plusieurs approches ont été testées :
+
+- Classe majoritaire.
+- Classification basée sur la durée de l'appel.
+- MFCC avec Logistic Regression.
+- Embeddings Wav2Vec2 avec Logistic Regression.
+
+Les résultats sont comparés pour identifier l'approche la plus intéressante.
+
+### 5.6. Évaluation
+
+Les modèles sont évalués à l'aide de plusieurs métriques :
+
+- Accuracy
+- Precision
+- Recall
+- F1-score
+- ROC-AUC
+- Matrice de confusion
+
+Une analyse supplémentaire est également réalisée pour vérifier l'influence de la durée des appels sur les résultats.
+
+## 6. Résultats préliminaires
+
+Les premières expériences ont été réalisées sur le dataset VISHGUARD.
+
+### 6.1. Informations sur les données
+
+| Élément | Valeur |
+|---|---|
+| Dataset | VISHGUARD |
+| Langues | Anglais et français |
+| Nombre d'appels | 2 061 |
+| Entraînement | 1 442 |
+| Validation | 206 |
+| Test | 413 |
+| Durée des segments | 10 secondes |
+| Chevauchement | 5 secondes |
+
+Les données sont séparées en trois ensembles : entraînement, validation et test.
+
+La séparation est réalisée au niveau de l'appel afin d'éviter que des segments d'un même appel soient présents dans plusieurs ensembles.
+
+### 6.2. Comparaison des modèles
+
+Les résultats obtenus sur les 413 appels de test sont les suivants :
+
+| Modèle | Accuracy | F1-score | AUC |
+|---|---:|---:|---:|
 | Classe majoritaire | 49,9 % | - | - |
-| Règle sur la durée de l'appel (seuil 18,9 s) | 95,6 % | - | 0,993 |
-| MFCC + régression logistique | 85,0 % | 0,86 | 0,936 |
-| Wav2Vec2 (XLS-R 300M) + régression logistique | 96,6 % | 0,97 | 0,994 |
+| Durée de l'appel | 95,6 % | - | 0,993 |
+| MFCC + Logistic Regression | 85,0 % | 0,861 | 0,936 |
+| Wav2Vec2 XLS-R 300M + Logistic Regression | 96,6 % | 0,967 | 0,994 |
 
-**Limite principale.** Dans VISHGUARD, les appels frauduleux sont nettement plus longs que les légitimes :
-la durée seule sépare les classes à 95,6 % (AUC 0,993). Les scores globaux surestiment donc la capacité
-du modèle à détecter le vishing. Dans une bande de ±2 s autour du seuil de durée (90 appels), le modèle
-atteint une AUC de 0,979 contre 0,883 pour la durée seule : il apprend donc autre chose que la longueur.
+Le modèle Wav2Vec2 avec Logistic Regression obtient les meilleurs résultats globaux parmi les approches testées.
 
-**À valider.** Une seule voix de synthèse par langue et des scripts écrits par les mêmes auteurs :
-ce signal peut venir du style des scripts ou de la voix. Une évaluation sur des appels réels ou
-sur une autre source est nécessaire avant toute conclusion sur des appels réels.
+### 6.3. Analyse de la durée des appels
 
-## 10. Avertissement
+Une limite importante a été identifiée pendant les expériences.
 
-Ce projet est réalisé à des fins académiques et de recherche en cybersécurité. Les résultats dépendront de la qualité, de la représentativité et des limites des données utilisées. Le système développé ne doit pas être considéré comme une garantie absolue de détection du vishing.
+Les appels frauduleux sont généralement plus longs que les appels légitimes dans le dataset utilisé.
+
+La durée seule permet donc d'obtenir une accuracy de 95,6 %.
+
+Pour mieux comprendre ce problème, une analyse supplémentaire a été réalisée sur 90 appels dont la durée est proche du seuil de 18,9 secondes.
+
+Les résultats sont les suivants :
+
+| Approche | AUC |
+|---|---:|
+| Durée seule | 0,883 |
+| Wav2Vec2 + Logistic Regression | 0,979 |
+
+Cette expérience montre que le modèle utilise également des informations audio autres que la durée de l'appel.
+
+Cependant, cette analyse reste préliminaire, car elle repose sur un nombre limité d'appels.
+
+## 7. État actuel du projet
+
+Plusieurs étapes importantes ont déjà été réalisées :
+
+- Étude et sélection du dataset VISHGUARD.
+- Préparation des données et création du manifest.
+- Vérification de la qualité des fichiers audio.
+- Création des ensembles Train, Validation et Test.
+- Traitement des données avec Apache Spark.
+- Extraction des caractéristiques MFCC.
+- Création de modèles de référence.
+- Extraction des embeddings avec Wav2Vec2 XLS-R 300M sur Kaggle.
+- Entraînement de Logistic Regression.
+- Évaluation et comparaison des modèles.
+- Analyse de l'influence de la durée des appels.
+- Intégration des étapes dans le pipeline du projet.
+- Suivi des expériences avec MLflow.
+- Collaboration avec Git et GitHub.
+
+Le meilleur résultat obtenu jusqu'à présent est de **96,6 % d'accuracy** avec Wav2Vec2 XLS-R 300M et Logistic Regression.
+
+## 8. Limites et prochaines étapes
+
+Malgré les bons résultats, plusieurs améliorations sont nécessaires.
+
+### Limites actuelles
+
+- Le dataset contient uniquement des appels en anglais et en français.
+- Les appels sont simulés avec des voix synthétiques.
+- Une seule voix est utilisée pour chaque langue.
+- Les scripts sont écrits par les mêmes auteurs.
+- Les résultats n'ont pas encore été validés sur des appels réels.
+- La durée des appels influence fortement les résultats.
+- L'analyse à durée contrôlée repose sur seulement 90 appels.
 
 
-## 11. Démarrage rapide
+## 9. Collaboration et versionnement
 
-Prérequis : Python 3.11 ou 3.12, Java 17 ou plus (pour PySpark).
+Le projet est développé en équipe avec Git et GitHub.
+
+- La branche `main` contient la version stable du projet.
+- Chaque nouvelle fonctionnalité est développée dans une branche séparée.
+- Les modifications sont intégrées avec des Pull Requests.
+- Les fichiers volumineux ne sont pas ajoutés directement dans Git.
+- DVC est utilisé pour organiser les étapes du pipeline et gérer les paramètres.
+
+Le stockage distant DVC reste à configurer pour partager les données et les modèles entre les membres de l'équipe.
+
+## 10. Démarrage rapide
+
+### Prérequis
+
+- Python 3.11 ou 3.12
+- Java 17 ou une version supérieure
+- Git
+
+### Installation
 
 ```bash
 python -m venv .venv
-.venv\Scripts\activate            # Windows (Linux/macOS : source .venv/bin/activate)
-pip install -r requirements.txt
-pip install -e .
-pytest -q                           # vérifie l'installation sur le mini-jeu
 ```
 
-Lancer une étape : `python -m vishing_detection.pipeline.run_stage <étape>`
-(`validate`, `prepare`, `baselines`, `features_handcrafted`, `embeddings`, `train`, `evaluate`), ou tout rejouer avec `dvc repro`.
+Sous Windows :
 
-L'architecture complète (pipeline Spark, Kaggle, évaluation, déploiement, organisation de l'équipe) est décrite dans [`docs/architecture.md`](docs/architecture.md).
+```bash
+.venv\Scripts\activate
+```
+
+Installer les dépendances :
+
+```bash
+pip install -r requirements.txt
+pip install -e .
+```
+
+Lancer les tests :
+
+```bash
+pytest -q
+```
+
+### Exécution du pipeline
+
+Pour lancer une étape :
+
+```bash
+python -m vishing_detection.pipeline.run_stage <etape>
+```
+
+Étapes disponibles :
+
+- `validate`
+- `prepare`
+- `features_handcrafted`
+- `baselines`
+- `embeddings`
+- `train`
+- `evaluate`
+- `analyse_duree`
+
+Pour exécuter le pipeline avec DVC :
+
+```bash
+dvc repro
+```
+
+Les étapes d'extraction des embeddings nécessitent un environnement avec GPU, comme Kaggle.
+
+Pour plus de détails sur l'architecture et l'organisation du projet, consultez [docs/architecture.md](docs/architecture.md).
+
+## 11. Avertissement
+
+Ce projet est réalisé dans un cadre académique et de recherche en cybersécurité.
+
+Les résultats dépendent de la qualité et des caractéristiques des données utilisées.
+
+Le système ne garantit pas une détection parfaite de toutes les tentatives de vishing et nécessite des tests supplémentaires sur des appels réels avant toute utilisation pratique.

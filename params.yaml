@@ -32,3 +32,24 @@ evaluate:
 analyse:
   band_widths: [2, 3, 4, 6]   # largeurs de bande (s) autour du seuil de durée
   min_calls: 30
+
+
+external:
+  root: data/raw/ftc_robocalls
+  metadata: metadata.csv
+  language: en          # le modèle est entraîné sur EN/FR ; le mandarin est exclu
+  limit: null             # test rapide ; mettre null pour tout traiter
+
+
+bootstrap:
+  band_halfwidth: 2
+  n_iter: 10000
+  ci: 0.95
+
+
+channel:
+  low_hz: 300
+  high_hz: 3400
+  mulaw: true            # quantification 8 bits type G.711, simple et déterministe
+
+
